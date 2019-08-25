@@ -56,6 +56,31 @@ void SynchConsole::SynchGetString(char *s, int n)
 	*s = '\0';
 }
 
+void SynchConsole::putchar(const char s[])
+{
+	int i=0;
+	while( s[i] != '\0' )
+	{
+		console->PutChar( s[i++] );
+		writeDone->P ();
+    }
+}
+
+void SynchConsole::getchar(char *s, int n)
+{
+	int c;
+	while (n>1)
+	{
+		readAvail->P ();
+		c = console->GetChar ();
+		*s++ = (char)c;
+		if ( (char)c == '\n' )
+			n=0;
+		else n--;
+	}
+	*s = '\0';
+}
+
 void SynchConsole::ReadAvailHandler(void *arg)
 {
 	(void) arg;
