@@ -56,7 +56,7 @@ void SynchConsole::SynchGetString(char *s, int n)
 	*s = '\0';
 }
 
-void SynchConsole::putchar(const char s[])
+void SynchConsole::PutChar(const char s[])
 {
 	int i=0;
 	while( s[i] != '\0' )
@@ -66,7 +66,7 @@ void SynchConsole::putchar(const char s[])
     }
 }
 
-void SynchConsole::getchar(char *s, int n)
+void SynchConsole::GetChar(char *s, int n)
 {
 	int c;
 	while (n>1)
@@ -91,6 +91,14 @@ void SynchConsole::WriteDoneHandler(void *arg)
 {
 	(void) arg;
 	writeDone->V();
+}
+//(5.2) Write a procedure similar to strcpy:
+void SynchConsole::copyStringFromMachine (int from, char *to, unsigned size) {
+        unsigned i;
+        for(i=0;i<size && machine->mainMemory[from+i] !='\0';i++) {
+                to[i] = machine->mainMemory[from+i];
+        }
+        to[i] = '\0';
 }
 
 #endif // CHANGED
