@@ -25,21 +25,24 @@
 #include "system.h"
 #include "syscall.h"
 
+#ifdef CHANGED
+#include "userthread.h"
+#endif
+
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
 // the user program immediately after the "syscall" instruction.
 //----------------------------------------------------------------------
 static void
-UpdatePC ()
+UpdatePC()
 {
-    int pc = machine->ReadRegister (PCReg);
-    machine->WriteRegister (PrevPCReg, pc);
-    pc = machine->ReadRegister (NextPCReg);
-    machine->WriteRegister (PCReg, pc);
-    pc += 4;
-    machine->WriteRegister (NextPCReg, pc);
+	int pc = machine->ReadRegister(PCReg);
+	machine->WriteRegister(PrevPCReg, pc);
+	pc = machine->ReadRegister(NextPCReg);
+	machine->WriteRegister(PCReg, pc);
+	pc += 4;
+	machine->WriteRegister(NextPCReg, pc);
 }
-
 
 //----------------------------------------------------------------------
 // ExceptionHandler
@@ -64,118 +67,133 @@ UpdatePC ()
 //      are in machine.h.
 //----------------------------------------------------------------------
 
-void
-ExceptionHandler (ExceptionType which)
+void ExceptionHandler(ExceptionType which)
 {
-    int type = machine->ReadRegister (2);
+	int type = machine->ReadRegister(2);
 
-    switch (which)
-      {
+	switch (which)
+	{
 	case SyscallException:
-          {
-	    switch (type)
-	      {
+	{
+		switch (type)
+		{
 		case SC_Halt:
-		  {
-		    DEBUG ('s', "Shutdown, initiated by user program.\n");
-		    interrupt->Halt ();
-		    break;
-		  }
+		{
+			DEBUG('s', "Shutdown, initiated by user program.\n");
+			interrupt->Halt();
+			break;
+		}
 #ifdef CHANGED
 		case SC_PutChar:
-		  {
-			DEBUG('s',"PutChar\n");
+		{
+			DEBUG('s', "PutChar\n");
 			int ch = machine->ReadRegister(4);
 			synchconsole->SynchPutChar(ch);
 			break;
-		  }
+		}
 		case SC_PutString:
-		  {
-			DEBUG('s',"PutString\n");
-			char st[MAX_STRING_SIZE];
+		{
+			DEBUG('s', "PutString\n");
+			char *st; // = new char[MAX_STRING_SIZE];
 			int reg = machine->ReadRegister(4);
 			copyStringFromMachine(reg, st, MAX_STRING_SIZE);
 			synchconsole->SynchPutString(st);
 			break;
-		  }
-		  case SC_Exit:
-		  {
-			DEBUG('s',"Exit\n");
+		}
+		case SC_Exit:
+		{
+			DEBUG('s', "Exit\n");
 			int returnValue = machine->ReadRegister(4);
-		    Exit( returnValue );
-		    break;
-		  }
-		  case SC_GetChar:
-		  {
-			DEBUG('s',"GetChar\n");
+			Exit(returnValue);
+			break;
+		}
+		case SC_GetChar:
+		{
+			DEBUG('s', "GetChar\n");
 			int readValue = synchconsole->SynchGetChar();
-			machine->WriteRegister(2,(char)readValue);
-		    break;
-		  }
-		  case SC_GetString:
-		  {
-			DEBUG('s',"GetString\n");
+			machine->WriteRegister(2, (char)readValue);
+			break;
+		}
+		case SC_GetString:
+		{
+			DEBUG('s', "GetString\n");
 			char st[MAX_STRING_SIZE];
 			int reg = machine->ReadRegister(4);
 			synchconsole->SynchGetString(st, MAX_STRING_SIZE);
 			copyStringToMachine(st, reg, MAX_STRING_SIZE);
-		    break;
-		  }
-		  case SC_PutInt:
-		  {
-			DEBUG('s',"PutInt\n");
+			break;
+		}
+		case SC_PutInt:
+		{
+			DEBUG('s', "PutInt\n");
 			char st[MAX_STRING_SIZE];
 			int val = machine->ReadRegister(4);
 			snprintf(st, MAX_STRING_SIZE, "%d", val);
 			synchconsole->SynchPutString(st);
 			break;
-		  }
-		  case SC_GetInt:
-		  {
-			DEBUG('s',"GetInt\n");
+		}
+		case SC_GetInt:
+		{
+			DEBUG('s', "GetInt\n");
 			char st[MAX_STRING_SIZE];
 			synchconsole->SynchGetString(st, MAX_STRING_SIZE);
 			int n;
 			sscanf(st, "%d", &n);
-			machine->WriteRegister(2,n);
-		    break;
-		  }
-		  case SC_ThreadCreate:
-		  {
-			DEBUG('s',"ThreadCreate\n");
-			// Think to return -1 if the creation failed by uncommented th below line:
-			// machine->WriteRegister(2,-1);
-		  	break;
-		  }
-		  case SC_ThreadExit:
-		  {
-			DEBUG('s',"ThreadExit\n");
-		  	break;
-		  }
+			machine->WriteRegister(2, n);
+			break;
+		}
+		case SC_ThreadCreate:
+		{
+			DEBUG('s', "ThreadCreate\n");
+
+#ifdef CHANGED
+			int f = machine->ReadRegister(4);
+			int arg = machine->ReadRegister(5);
+			int f_exit = machine->ReadRegister(6);
+			int ret = do_ThreadCreate(f, arg, f_exit);
+
+			// Return -1 if the creation failed
+			machine->WriteRegister(2, ret);
+#endif
+			break;
+		}
+		case SC_ThreadExit:
+		{
+			DEBUG('s', "ThreadExit\n");
+
+#ifdef CHANGED
+			do_ThreadExit();
+#endif
+
+			break;
+		}
 #endif // CHANGED
 		default:
-		  {
-		    printf("Unimplemented system call %d\n", type);
-		    ASSERT(FALSE);
-		  }
-	      }
+		{
+			printf("Unimplemented system call %d\n", type);
+			ASSERT(FALSE);
+		}
+		}
 
-	    // Do not forget to increment the pc before returning!
-	    UpdatePC ();
-	    break;
-	  }
+		// Do not forget to increment the pc before returning!
+		UpdatePC();
+		break;
+	}
 
 	case PageFaultException:
-	  if (!type) {
-	    printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
-	    ASSERT (FALSE);
-	  } else {
-	    printf ("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
-	    ASSERT (FALSE);	// For now
-	  }
+		if (!type)
+		{
+			printf("NULL dereference at PC %x!\n", machine->registers[PCReg]);
+			ASSERT(FALSE);
+		}
+		else
+		{
+			printf("Page Fault at address %x at PC %x\n", type, machine->registers[PCReg]);
+			ASSERT(FALSE); // For now
+		}
 
 	default:
-	  printf ("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
-	  ASSERT (FALSE);
-      }
+		printf("Unexpected user mode exception %d %d at PC %x\n", which, type, machine->registers[PCReg]);
+		ASSERT(FALSE);
+	}
 }

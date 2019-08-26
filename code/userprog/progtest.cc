@@ -89,9 +89,10 @@ ConsoleTest (const char *in, const char *out)
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
 
     for (;;)
-      {
-	  readAvail->P ();	// wait for character to arrive
-	  ch = console->GetChar ();
+    {
+	    readAvail->P ();	// wait for character to arrive
+	    ch = console->GetChar ();
+
 #ifdef CHANGED
       if ( ch != '\n' )
       {
@@ -99,8 +100,10 @@ ConsoleTest (const char *in, const char *out)
         writeDone->P ();
       }
 #endif
+
       console->PutChar (ch);    // echo it!
       writeDone->P ();  // wait for write to finish
+
 #ifdef CHANGED
       if ( ch != '\n' )
       {
@@ -108,14 +111,16 @@ ConsoleTest (const char *in, const char *out)
         writeDone->P ();
       }
 #endif
-      if (ch == 'q') {
-#ifdef CHANGED
-          printf ("Au revoir !\n");
-#endif
+
+      if (ch == 'q') 
+      {
 	      printf ("Nothing more, bye!\n");
+      #ifdef CHANGED
+        printf ("Goodbye!\n");
+      #endif
 	      break;		// if q, quit
-	  }
-      }
+	    }
+    }
     delete console;
     delete readAvail;
     delete writeDone;
@@ -131,13 +136,11 @@ SynchConsoleTest (const char *in, const char *out)
   while ((ch = test_synchconsole->SynchGetChar()) != EOF)
   {
     if ( ch != '\n' )
-     // test_synchconsole->SynchPutChar('<');
-    test_synchconsole->SynchPutChar('<'+ch+'>'); //Modify userprog/progtest.cc to write “<x>” instead of “x” in the loop body (regardless of the “x” character).
-   // if ( ch != '\n' )
-      //test_synchconsole->SynchPutChar('>');
+      test_synchconsole->SynchPutChar('<');
+    test_synchconsole->SynchPutChar(ch);
+    if ( ch != '\n' )
+      test_synchconsole->SynchPutChar('>');
   }
-  fprintf(stderr, "Good bye!\n"); //(2.2) Modify userprog/progtest.cc to display "Goodbye" to end of file (EOF), in addition to the character ’q’. (Note:
-//to test, simply type control-D at the beginning of the line).
   fprintf(stderr, "EOF detected in SynchConsole!\n");
 }
 #endif //CHANGED

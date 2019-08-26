@@ -29,19 +29,24 @@ ifeq ($(NACHOS_ARCH),PPC_ARCH)
 CFLAGS += -DHOST_IS_BIG_ENDIAN
 endif
 
+ifeq ($(NACHOS_ARCH),X86_ARCH)
+CFLAGS += -DHOST_i386 -m32
+LDFLAGS += -fno-lto -m32
+endif
+
 all: coff2noff
 
 # converts a COFF file to Nachos object format
 coff2noff: coff2noff.o
-	$(LD) coff2noff.o -o coff2noff
+	$(LD) coff2noff.o $(LDFLAGS) -o coff2noff
 
 # converts a COFF file to a flat address space (for Nachos version 2)
 coff2flat: coff2flat.o
-	$(LD) coff2flat.o -o coff2flat
+	$(LD) coff2flat.o $(LDFLAGS) -o coff2flat
 
 # dis-assembles a COFF file
 disassemble: out.o opstrings.o
-	$(LD) out.o opstrings.o -o disassemble
+	$(LD) out.o opstrings.o $(LDFLAGS) -o disassemble
 
 # Cleaning rule
 .PHONY: clean

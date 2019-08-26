@@ -35,11 +35,11 @@ extern Machine *machine;	// user program memory and registers
 #ifdef CHANGED
 #include "synchconsole.h"
 extern SynchConsole *synchconsole;
-extern int copyStringFromMachine(int from, char *to, unsigned size);
+extern int copyStringFromMachine(int from, char *&to, unsigned size);
 extern int copyStringToMachine(char *from, int to, unsigned size);
 #define MAX_STRING_SIZE	15
 #endif // CHANGED
-#endif
+#endif // USER_PROGRAM
 
 #ifdef FILESYS_NEEDED		// FILESYS or FILESYS_STUB
 #include "filesys.h"

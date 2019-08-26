@@ -14,22 +14,27 @@ void print(char c, int n)
 
 int main()
 {
-	char s[30];
+	// char s[30];
 	int n;
-	print('a',4);
+	// print('a',4);
 
-	// PutString("ploploploplopldsigfiodsugiodsugiofugiofdugiofdugiodfugiofdugiodu\n");
-	// n = GetChar();
-	// PutChar(n);
-	// PutChar('\n');
+	PutString("1234567890abcdefg\n");
+	n = GetChar();
 
+	if(n != '\n') {
+		PutChar(n);
+		PutChar('\n');
+	}
+
+	
 	// GetString(s,30);
 	// PutString(s);
 
-	n = GetInt();
-	PutInt(n);
-	PutChar('\n');
+	// n = GetInt();
+	// PutInt(n);
+	// PutChar('\n');
 
 	//You can test 'echo $?' in a terminal to see the '2' value
 	Exit(2);
+	//Halt();
 }

@@ -30,7 +30,9 @@ SimpleThread (void *arg)
     for (num = 0; num < 10; num++)
       {
 	  printf ("*** thread %d looped %d times\n", which, num);
+#ifdef CHANGED
 	  currentThread->Yield ();
+#endif
       }
 }
 
@@ -44,9 +46,13 @@ void
 ThreadTest ()
 {
     DEBUG ('t', "Entering SimpleTest\n");
-
     Thread *t = new Thread ("forked thread");
-
     t->Start (SimpleThread, (void*) 1);
+
+    #ifdef CHANGED
+    Thread *t2 = new Thread ("forked thread");
+    t2->Start (SimpleThread, (void*) 2);    
+    #endif
+
     SimpleThread (0);
 }

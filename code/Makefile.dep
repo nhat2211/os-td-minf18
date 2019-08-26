@@ -36,6 +36,8 @@ HOST += -DSOLARIS
 endif
 
 ifeq ($(NACHOS_SYS),LINUX_SYS)
+CFLAGS += -m32
+LDFLAGS += -fno-lto -m32
 HOST += -DLINUX
 endif
 

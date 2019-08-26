@@ -8,20 +8,16 @@
 #include "console.h"
 #include "synch.h"
 
-class SynchConsole:dontcopythis
+class SynchConsole : dontcopythis
 {
 public:
 	SynchConsole(const char *readFile, const char *writeFile); // initialize the hardware console device
-	~SynchConsole();                                           // clean up console emulation
+	~SynchConsole();										   // clean up console emulation
 
-	void SynchPutChar(int ch);                                 // Unix putchar(3S)
-	int SynchGetChar();                                        // Unix getchar(3S)
-	void SynchPutString(const char *s);                        // Unix fputs(3S)
-	void SynchGetString(char *s, int n);                       // Unix fgets(3S)
-	void PutChar(const char s[]);
-	void GetChar(char *s);
-	//(5.2) Write a procedure similar to strcpy:
-	int copyStringFromMachine(int from , char * to , unsigned size);
+	void SynchPutChar(int ch);			 // Unix putchar(3S)
+	int SynchGetChar();					 // Unix getchar(3S)
+	void SynchPutString(const char *s);  // Unix fputs(3S)
+	void SynchGetString(char *s, int n); // Unix fgets(3S)
 
 private:
 	static void ReadAvailHandler(void *arg);
@@ -31,6 +27,9 @@ private:
 	static Semaphore *writeDone;
 
 	Console *console;
+
+	Lock *m_readLock;  // Read Lock
+	Lock *m_writeLock; // Write Lock
 };
 
 #endif // SYNCHCONSOLE_H

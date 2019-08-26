@@ -12,11 +12,25 @@
 
 #include "syscall.h"
 
+#ifdef CHANGED
+// Modify the program halt.c to introduce some calculation
+int g_num1 = 10;
+int g_num2 = 20;
+#endif
+
 int
 main ()
 {
+    #ifdef CHANGED
+    // Modify the program halt.c to introduce some calculation
+    int result = g_num1 + g_num2;
+    result *= g_num2 + 1;    
+    #endif
+
     Halt ();
 
     /* not reached */
-    return 0;
+    #ifdef CHANGED
+    return result;
+    #endif
 }

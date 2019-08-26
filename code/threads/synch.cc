@@ -1,6 +1,6 @@
-// synch.cc 
+// synch.cc
 //      Routines for synchronizing threads.  Three kinds of
-//      synchronization routines are defined here: semaphores, locks 
+//      synchronization routines are defined here: semaphores, locks
 //      and condition variables (the implementation of the last two
 //      are left to the reader).
 //
@@ -18,7 +18,7 @@
 // that be disabled or enabled).
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -33,7 +33,7 @@
 //      "initialValue" is the initial value of the semaphore.
 //----------------------------------------------------------------------
 
-Semaphore::Semaphore (const char *debugName, int initialValue)
+Semaphore::Semaphore(const char *debugName, int initialValue)
 {
     name = debugName;
     value = initialValue;
@@ -46,7 +46,7 @@ Semaphore::Semaphore (const char *debugName, int initialValue)
 //      is still waiting on the semaphore!
 //----------------------------------------------------------------------
 
-Semaphore::~Semaphore ()
+Semaphore::~Semaphore()
 {
     delete queue;
 }
@@ -61,20 +61,19 @@ Semaphore::~Semaphore ()
 //      when it is called.
 //----------------------------------------------------------------------
 
-void
-Semaphore::P ()
+void Semaphore::P()
 {
-    IntStatus oldLevel = interrupt->SetLevel (IntOff);	// disable interrupts
+    IntStatus oldLevel = interrupt->SetLevel(IntOff); // disable interrupts
 
     while (value == 0)
-      {				// semaphore not available
-	  queue->Append ((void *) currentThread);	// so go to sleep
-	  currentThread->Sleep ();
-      }
-    value--;			// semaphore available, 
+    {                                         // semaphore not available
+        queue->Append((void *)currentThread); // so go to sleep
+        currentThread->Sleep();
+    }
+    value--; // semaphore available,
     // consume its value
 
-    (void) interrupt->SetLevel (oldLevel);	// re-enable interrupts
+    (void)interrupt->SetLevel(oldLevel); // re-enable interrupts
 }
 
 //----------------------------------------------------------------------
@@ -85,74 +84,75 @@ Semaphore::P ()
 //      are disabled when it is called.
 //----------------------------------------------------------------------
 
-void
-Semaphore::V ()
+void Semaphore::V()
 {
     Thread *thread;
-    IntStatus oldLevel = interrupt->SetLevel (IntOff);
+    IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
-    thread = (Thread *) queue->Remove ();
-    if (thread != NULL)		// make thread ready, consuming the V immediately
-	scheduler->ReadyToRun (thread);
+    thread = (Thread *)queue->Remove();
+    if (thread != NULL) // make thread ready, consuming the V immediately
+        scheduler->ReadyToRun(thread);
     value++;
-    (void) interrupt->SetLevel (oldLevel);
+    (void)interrupt->SetLevel(oldLevel);
 }
 
-// Dummy functions -- so we can compile our later assignments 
-// Note -- without a correct implementation of Condition::Wait(), 
+// Dummy functions -- so we can compile our later assignments
+// Note -- without a correct implementation of Condition::Wait(),
 // the test case in the network assignment won't work!
-Lock::Lock (const char *debugName)
+Lock::Lock(const char *debugName)
 {
-    (void) debugName;
+#ifdef CHANGED
+    name = debugName != NULL ? debugName : "lock";
+    m_semaphore = new Semaphore(name, 1);
+#endif
+}
+
+Lock::~Lock()
+{
+#ifdef CHANGED
+    delete m_semaphore;
+#endif
+}
+void Lock::Acquire()
+{
+#ifdef CHANGED
+    m_semaphore->P();
+#endif
+}
+
+void Lock::Release()
+{
+#ifdef CHANGED
+    m_semaphore->V();
+#endif
+}
+
+Condition::Condition(const char *debugName)
+{
+    (void)debugName;
     /* TODO */
     ASSERT(FALSE);
 }
 
-Lock::~Lock ()
+Condition::~Condition()
 {
 }
-void
-Lock::Acquire ()
+void Condition::Wait(Lock *conditionLock)
 {
-    /* TODO */
-    ASSERT(FALSE);
-}
-void
-Lock::Release ()
-{
+    (void)conditionLock;
     /* TODO */
     ASSERT(FALSE);
 }
 
-Condition::Condition (const char *debugName)
+void Condition::Signal(Lock *conditionLock)
 {
-    (void) debugName;
+    (void)conditionLock;
     /* TODO */
     ASSERT(FALSE);
 }
-
-Condition::~Condition ()
+void Condition::Broadcast(Lock *conditionLock)
 {
-}
-void
-Condition::Wait (Lock * conditionLock)
-{
-    (void) conditionLock;
-    /* TODO */
-    ASSERT (FALSE);
-}
-
-void
-Condition::Signal (Lock * conditionLock)
-{
-    (void) conditionLock;
-    /* TODO */
-    ASSERT(FALSE);
-}
-void
-Condition::Broadcast (Lock * conditionLock)
-{
-    (void) conditionLock;
+    (void)conditionLock;
     /* TODO */
     ASSERT(FALSE);
 }
