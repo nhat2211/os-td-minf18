@@ -38,8 +38,7 @@ Explain why it is a mistake to try:
     - because Write "ch" to the console display, and return immediately. "writeDone" is called when the I/O completes.
   
 * To try to write before being warned that the previous writing is complete.
-    - because the previous writing must be complete then "writeDone" is called when the I/O
-completes so to try to write before the error will be occur.
+    - because the previous writing must be complete then "writeDone" is called when the I/O completes so to try to write before the error will be occur.
 
 ### 2.1 Examine the `userprog/progtest.cc` program.
 ```c
@@ -57,10 +56,9 @@ void ConsoleTest (const char *in, const char *out)
 
         console->PutChar (ch);    // echo it!
         writeDone->P ();  // wait for write to finish
-
         if (ch == 'q') {
             printf ("Nothing more, bye!\n");
-            break;		// if q, quit
+            break;	
         }
     }
 
@@ -120,15 +118,12 @@ void ConsoleTest (const char *in, const char *out)
         console->PutChar ('<');
         writeDone->P ();
     #endif
-
         console->PutChar (ch);    // echo it!
-        writeDone->P ();  // wait for write to finish
-
+        writeDone->P ();  
     #ifdef CHANGED
         console->PutChar ('>');
         writeDone->P ();
     #endif
-
         if (ch == 'q') {
             printf ("Nothing more, bye!\n");
         #ifdef CHANGED
@@ -137,7 +132,6 @@ void ConsoleTest (const char *in, const char *out)
             break;		// if q, quit
         }
     }
-    
     delete console;
     delete readAvail;
     delete writeDone;
@@ -152,12 +146,10 @@ void ConsoleTest (const char *in, const char *out)
     readAvail = new Semaphore ("read avail", 0);
     writeDone = new Semaphore ("write done", 0);
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-
     for (;;)
     {
         readAvail->P ();	// wait for character to arrive
         ch = console->GetChar ();
-
     #ifdef CHANGED
         if(ch != '\n')
         {
@@ -165,10 +157,8 @@ void ConsoleTest (const char *in, const char *out)
             writeDone->P ();
         }        
     #endif
-
         console->PutChar (ch);    // echo it!
         writeDone->P ();  // wait for write to finish
-        
     #ifdef CHANGED
         if(ch != '\n')
         {
@@ -176,7 +166,6 @@ void ConsoleTest (const char *in, const char *out)
             writeDone->P ();
         }
     #endif
-
         if (ch == 'q') {
             printf ("Nothing more, bye!\n");
         #ifdef CHANGED
@@ -185,7 +174,6 @@ void ConsoleTest (const char *in, const char *out)
             break;		// if q, quit
         }
     }
-    
     delete console;
     delete readAvail;
     delete writeDone;
@@ -221,39 +209,32 @@ private:
 ```c++
 Semaphore* SynchConsole::readAvail = new Semaphore("read avail", 0);
 Semaphore* SynchConsole::writeDone = new Semaphore("write done", 0);
-
 SynchConsole::SynchConsole(const char *in, const char *out)
 {
 	console = new Console(in, out, ReadAvailHandler, WriteDoneHandler, 0);
 }
-
 SynchConsole::~SynchConsole()
 {
 	delete console;
 	delete writeDone;
 	delete readAvail;
 }
-
 void SynchConsole::ReadAvailHandler(void *arg)
 {
 	(void)arg; readAvail->V();
 }
-
 void SynchConsole::WriteDoneHandler(void *arg)
 {
 	(void)arg; writeDone->V();
 }
-
 oid SynchConsole::SynchPutChar(int ch)
 {
 	console->PutChar(ch); writeDone->P();
 }
-
 int SynchConsole::SynchGetChar()
 {
 	readAvail->P(); return console->GetChar();
 }
-
 void SynchConsole::SynchPutString(const char s[])
 {
 	int i = 0;
@@ -262,7 +243,6 @@ void SynchConsole::SynchPutString(const char s[])
 		console->PutChar(s[i++]); writeDone->P();
 	}
 }
-
 void SynchConsole::SynchGetString(char *s, int n)
 {
 	int c;
