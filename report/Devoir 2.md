@@ -503,14 +503,9 @@ int main()
     {
         (void)interrupt->SetLevel(IntOff);
         ASSERT(this == currentThread);
-
         DEBUG('t', "Finishing thread \"%s\"\n", getName());
-
-        // LB: Be careful to guarantee that no thread to be destroyed
-        // is ever lost
         ASSERT(threadToBeDestroyed == NULL);
         // End of addition
-
         threadToBeDestroyed = currentThread;
         Sleep(); // invokes SWITCH
         // not reached
@@ -545,7 +540,6 @@ int do_ThreadCreate(int f, int arg, int f_e)
     Thread *newThread = new Thread("user thread");
     if (newThread)
     {
-        ...
         thread_counter_lock->Acquire();
         threads_counter++;
         thread_counter_lock->Release();
@@ -777,7 +771,7 @@ int main()
 }
 ```
 
-## 3. Automatic Termination (bonus)
+## 3. Automatic Termination
 The `RetAddrReg` register hold the return address from the procedure call, thus we can just set the register to the address of `ThreadExit`, it will call the exit automatically.
 
 ```c++
