@@ -1,4 +1,14 @@
-# NachOS TD2: Multi-threading
+# Minf18
+TD OS Reporting
+
+Devoir 2
+
+Members:
+
+Vo Hung Son
+
+Tran Quang Nhat
+# Multi-threading
 ## 1. Multi-threading in user programs
 
 * Examine in details how NachOS threads work (kernel and user). How are allocated and initialized these threads?
