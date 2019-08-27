@@ -41,7 +41,7 @@ Explain why it is a mistake to try:
     - because the previous writing must be complete then "writeDone" is called when the I/O completes so to try to write before the error will be occur.
 
 ### 2.1 Examine the `userprog/progtest.cc` program.
-```c
+
 void ConsoleTest (const char *in, const char *out)
 {
     char ch;
@@ -66,7 +66,6 @@ void ConsoleTest (const char *in, const char *out)
     delete readAvail;
     delete writeDone;
 }
-```
 
 ### 2.2 Modify `userprog/progtest.cc` to display "Goodbye" to end of file (EOF), in addition to the character ’q’.
 ```c
