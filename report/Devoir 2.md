@@ -299,19 +299,6 @@ int main()
 
 ```
 
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -rs 1234 -x ./test/makethreads
-Test PutChar():
-a
-
-Test PutString():
-arg:
-Hello User Thread!
-
-Thread ended!
-
-```
-
 ## 2. Multiple Threads per process
 ## 2.1 Put `SynchPutChar()` and `SynchGetChar()` in critical section
 ```c++
@@ -474,27 +461,6 @@ int main()
 }
 ```
 
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -rs 1234 -x ./test/makethreads
-Started thread!
-waiting!
-waiting!
-waiting!
-Test PutChar():
-a
-
-Test PutString():
-arg:
-Hello User Thread!
-waiting!
-waiting!
-waiting!
-
-Thread ended!
-waiting!
-Thread ended in kernel!
-```
-
 * Can you use two different locks?
     - Yes, we should use two locks, because read and write activities can be considered as 'non-critical' at hardware/kernel level, which can do in parallel to have better performance.
     - The implementation used two threads: one for reading and one for writing.
@@ -530,23 +496,6 @@ Thread ended in kernel!
         }
         ```
 
-        ```shell
-        phi@phi-pc:~/nacho/code$ ./userprog/nachos -rs 1234 -x ./test/makethreads
-        StTarted thest PutChar():
-        a
-
-        read!
-        Test PutStwaiting!
-        wring():
-        aaiting!
-        rg:
-        Hello User Threwaad!
-
-        Thread endeiting!
-        wad!
-        iting!
-        Thread ended in kernel!
-        ```
 * Does NachOS actually end if both the thread created and the initial thread are using ThreadExit?
     - No, the scheduler still running waiting for the new thread to be executed. Notice the Thread::Finish() and Thread::Sleep() functions:
     ```c++
@@ -621,27 +570,7 @@ void do_ThreadExit()
     }
 }
 ```
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -rs 1234 -x ./test/makethreads
-Started thread!
-Test PutChar():
-a
 
-Test PutString():
-arg:
-Hello User Thread!
-
-Thread ended!
-Machine halting!
-
-Ticks: total 11157, idle 9681, system 1380, user 96
-Disk I/O: reads 0, writes 0
-Console I/O: reads 0, writes 97
-Paging: faults 0
-Network I/O: packets received 0, sent 0
-
-Cleaning up...
-```
 * What would happen if the program started several threads instead of one?
     - The stack allocation is too basic, it only preserve space for one thread and without any guard/lock. So, it would crash with more than one threads created, even though it may work with small memory usage.
     ```c++
@@ -670,18 +599,6 @@ Cleaning up...
         PutString("Thread ended in kernel!\n");
         ThreadExit();
     }
-    ```
-    ```shell
-    phi@phi-pc:~/nacho/code$ ./userprog/nachos -rs 1234 -x ./test/makethreads
-    Test PutChar():
-    a
-
-    Test PutString():
-    arg:
-    TPage Fault at address c at PC 15c
-    Assertion failed: line 192, file exception.cc
-    qemu: uncaught target signal 6 (Aborted) - core dumped
-    Aborted (core dumped)
     ```
 
 ## 2.3 Threads with for loop and stack
@@ -859,38 +776,6 @@ int main()
 	ThreadExit();
 }
 ```
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -rx 1234 -x ./test/makethreads
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-Machine halting!
-
-Ticks: total 148508, idle 101900, system 31230, user 15378
-Disk I/O: reads 0, writes 0
-Console I/O: reads 0, writes 1020
-Paging: faults 0
-Network I/O: packets received 0, sent 0
-
-Cleaning up...
-```
 
 ## 3. Automatic Termination (bonus)
 The `RetAddrReg` register hold the return address from the procedure call, thus we can just set the register to the address of `ThreadExit`, it will call the exit automatically.
@@ -1038,37 +923,3 @@ int main()
 }
 
 ```
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -rx 1234 -x ./test/makethreads
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-Machine halting!
-
-Ticks: total 148528, idle 101900, system 31230, user 15398
-Disk I/O: reads 0, writes 0
-Console I/O: reads 0, writes 1020
-Paging: faults 0
-Network I/O: packets received 0, sent 0
-
-Cleaning up...
-```
-## 4. Semaphores (bonus)
-Sorry professor, we have no time for this at now. The implementation should be trivial (though it's also time consuming).
