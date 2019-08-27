@@ -49,15 +49,6 @@ int main()
 }
 ```
 
-### 1.2 Create thread in user program process
-* CPU calls:
-
-    ![Alt text](images/cpu_thread_calls.png "CPU Thread Calls")
-
-* Memory allocation:
-
-    ![Alt text](images/thread_mem_allocation.png "Thread Memory Allocation")
-
 ### 1.3 Set up the system call interface
 ```c++
 /** syacall.h */
