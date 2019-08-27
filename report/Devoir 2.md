@@ -48,97 +48,6 @@ int main()
 	Exit(2);	
 }
 ```
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -s -d a -x ./test/putchar
-Initializing address space, num pages 14, total size 0x700
-Initializing code segment, at 0x0, size 0x290
-Initializing data segment, at 0x290, size 0x20
-Area for stacks at 0x300, size 0x400
-Initializing stack register to 0x6f0
-Reading VA 0x80, size 4
-        Translate 0x80, read: phys addr = 0x80
-        value read = 0c00008f
-Time: 11, interrupts on
-Pending interrupts:
-Interrupt handler console read, scheduled at 110
-End of pending interrupts
-Machine registers:
-        0:      0x0     1:      0x0     2:      0x0     3:      0x0
-        4:      0x0     5:      0x0     6:      0x0     7:      0x0
-        8:      0x0     9:      0x0     10:     0x0     11:     0x0
-        12:     0x0     13:     0x0     14:     0x0     15:     0x0
-        16:     0x0     17:     0x0     18:     0x0     19:     0x0
-        20:     0x0     21:     0x0     22:     0x0     23:     0x0
-        24:     0x0     25:     0x0     26:     0x0     27:     0x0
-        28:     0x0     SP(29): 0x6f0   30:     0x0     RA(31): 0x88
-        Hi:     0x0     Lo:     0x0
-        PC:     0x84    NextPC: 0x23c   PrevPC: 0x80
-        Load:   0x0     LoadV:  0x0
-...
-22> 
-Reading VA 0x15c, size 4
-        Translate 0x15c, read: phys addr = 0x15c
-        value read = 0000000c
-Reading VA 0x290, size 1
-        Translate 0x290, read: phys addr = 0x290
-        value read = 00000031
-Reading VA 0x291, size 1
-        Translate 0x291, read: phys addr = 0x291
-        value read = 00000032
-Reading VA 0x292, size 1
-        Translate 0x292, read: phys addr = 0x292
-        value read = 00000033
-Reading VA 0x293, size 1
-        Translate 0x293, read: phys addr = 0x293
-        value read = 00000034
-Reading VA 0x294, size 1
-        Translate 0x294, read: phys addr = 0x294
-        value read = 00000035
-Reading VA 0x295, size 1
-        Translate 0x295, read: phys addr = 0x295
-        value read = 00000036
-Reading VA 0x296, size 1
-        Translate 0x296, read: phys addr = 0x296
-        value read = 00000037
-Reading VA 0x297, size 1
-        Translate 0x297, read: phys addr = 0x297
-        value read = 00000038
-Reading VA 0x298, size 1
-        Translate 0x298, read: phys addr = 0x298
-        value read = 00000039
-Reading VA 0x299, size 1
-        Translate 0x299, read: phys addr = 0x299
-        value read = 00000030
-Reading VA 0x29a, size 1
-        Translate 0x29a, read: phys addr = 0x29a
-        value read = 00000061
-Reading VA 0x29b, size 1
-        Translate 0x29b, read: phys addr = 0x29b
-        value read = 00000062
-Reading VA 0x29c, size 1
-        Translate 0x29c, read: phys addr = 0x29c
-        value read = 00000063
-Reading VA 0x29d, size 1
-        Translate 0x29d, read: phys addr = 0x29d
-        value read = 00000064
-Reading VA 0x29e, size 1
-        Translate 0x29e, read: phys addr = 0x29e
-        value read = 00000065
-Reading VA 0x29f, size 1
-        Translate 0x29f, read: phys addr = 0x29f
-        value read = 00000066
-Reading VA 0x2a0, size 1
-        Translate 0x2a0, read: phys addr = 0x2a0
-        value read = 00000067
-Reading VA 0x2a1, size 1
-        Translate 0x2a1, read: phys addr = 0x2a1
-        value read = 0000000a
-Reading VA 0x2a2, size 1
-        Translate 0x2a2, read: phys addr = 0x2a2
-        value read = 00000000
-1234567890abcdefg
-...
-```
 
 ### 1.2 Create thread in user program process
 * CPU calls:
@@ -803,37 +712,9 @@ int main()
 	ThreadExit();
 }
 ```
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -rs 1234 -x ./test/makethreads
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-aa
-a
-a
 
-a
-a
-
-
-a
-Machine halting!
-
-Ticks: total 17969, idle 11081, system 4900, user 1988
-Disk I/O: reads 0, writes 0
-Console I/O: reads 0, writes 122
-Paging: faults 0
-Network I/O: packets received 0, sent 0
-
-Cleaning up...
-```
 * What happens if a program launches a large number of threads?
-    - It will crash because of lacking memory. For instance, tested with 10000 threads:
-    ```shell
-    phi@phi-pc:~/nacho/code$ ./userprog/nachos -rs 1234 -x ./test/makethreads
-    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaterminate called after throwing an instance of 'std::bad_alloc'
-    what():  std::bad_alloc
-    qemu: uncaught target signal 6 (Aborted) - core dumped
-    Aborted (core dumped)
-    ```
+    - It will crash because of lacking memory. 
 
 ## 2.4 Review stack allocation mechanism
 ```c++
