@@ -552,10 +552,6 @@ int main()
 }
 ```
 
-```shell
-phi@phi-pc:~/nacho/code$ ./userprog/nachos -x ./test/putchar
-1234567890abcd
-```
 * The MAX_STRING_SIZE set to 15, thus it only put 15 first characters of the string to the console.
     - Possible fixes:
         + Increase the MAX_STRING_SIZE to something larger (256, 512, ...) => Costly, and waste of memory for short string, not recommended.
@@ -622,10 +618,7 @@ phi@phi-pc:~/nacho/code$ ./userprog/nachos -x ./test/putchar
                 ...
             }
             ```
-            ```shell
-            phi@phi-pc:~/nacho/code$ ./userprog/nachos -x ./test/putchar
-            1234567890abcdefg
-            ```
+	    
 ## 6. But how to stop?
 * What happens if you remove the call to `Halt()` at the end of the main function of `putchar.c`?
     - In my PC, it print the input to console, then quit without printing machine's statistic. However, nothing wrong happened (exception nor error, ...)
