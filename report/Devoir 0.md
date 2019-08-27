@@ -1,8 +1,12 @@
 # MINF18
 TD OS Reporting 
+
 Devoir 0 
+
 Members:
+
 Vo Hung Son 
+
 Tran Quang Nhat
 
 
