@@ -3,6 +3,7 @@
 	- Devoir 1
 	- Members:
 	- Vo Hung Son
+	- Le Dinh Than
 	- Tran Quang Nhat
 * Concurrency and synchronization
 
