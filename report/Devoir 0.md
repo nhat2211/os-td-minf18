@@ -1,14 +1,9 @@
 # MINF18
-TD OS Reporting 
-
-Devoir 0 
-
-Members:
-
-Vo Hung Son 
-
-Tran Quang Nhat
-
+* TD OS Reporting 
+    - Devoir 0 
+    - Members:
+    - Vo Hung Son 
+    - Tran Quang Nhat
 
 ## 2. Source code reading
 ### 2.1 Simulation principles
@@ -22,8 +17,6 @@ Source file of a MIPS user program: Assembly Language
 => add, 2 => subtract or 3 => multiply: "
 5. resultText: .asciiz "Your final result is: "
 The programming language used each time is C++ language.
-
-
 The code of `./userprog/nachos -x ./test/halt`
 * File [`./threads/main.cc`](../code/threads/main.cc):
     ```c++
@@ -80,7 +73,6 @@ The code of `./userprog/nachos -x ./test/halt`
         return 0;
     }
     ``` 
-
 ### 2.2 System initialization
 
 * How is this first kernel thread created?
@@ -96,10 +88,8 @@ The code of `./userprog/nachos -x ./test/halt`
     - Step 10: Set IntStatus oldLevel = interrupt->SetLevel (IntOff)
     - Step 11: Run the thread by code line scheduler->ReadyToRun (this);
     - So the first kernel thread is the main thread that was created by operating system.
-
 * Where does its stack and its registers come from?
 The stack and registers come from the main thread which is called by the real operating system, when allocate the program and start the `main()` method.
-
 * What is the (future) role of the data structure allocated by the instruction:
 HOST_SNAKE: HP stack works from low addresses to high addresses;HP requires 64-byte frame marker
 #else: other archs stack works from high addresses to low addresses HOST_SPARC:SPARC stack must contains at least 1 activation record to start with. HOST_PPC
@@ -113,8 +103,6 @@ The role of the currentThread is to keep the handle of the main thread so that w
 
 * Why is it necessary to call the Start method for the next kernel threads? (focus into threads/thread.h and threads/thread.cc)
 Because in multiple threading program, only the main thread initialized by the OS caller, other threads are initialized by the program's code using thread API. Thus, any thread other than main thread need calling `Start()` to start running.
-
-
 ### 2.3 User program execution
 Locate the MIPS processor allocation in the code of the `Initialize()` function and read the initialization code for this object to answer the following questions:
 How are the registers of this processor initialized?
@@ -181,7 +169,6 @@ Scroll through the code of the `StartProcess()` function to recognize:
         }
     }
     ```
-
 Read the code of the `Machine::Run()` function and locate the function that executes a MIPS instruction.
 
 * What is the name of the exception thrown when an addition (assembly instruction `OP_ADD`) overflows?
@@ -197,7 +184,6 @@ Read the code of the `Machine::Run()` function and locate the function that exec
             registers[instr->rd] = sum;
         break;
     ```
-
 * Observe the end of this function: which is the register containing the program counter?
     ```c++
     // Advance program counters.
@@ -205,11 +191,10 @@ Read the code of the `Machine::Run()` function and locate the function that exec
     registers[PCReg] = registers[NextPCReg];
     registers[NextPCReg] = pcAfter;
     ```
-
 ## 5. Using the NachOS System
 ### 5.1. Kernel thread observation
     ```shell
-    ~/nacho/code/userprog$ ./nachos -d m -x ../test/halt
+    ./nachos -d m -x ../test/halt
     Starting thread "main" at time 10
     At PC = 0x80: JAL 4*116
     At PC = 0x84: SLL r0,r0,0
@@ -224,7 +209,6 @@ Read the code of the `Machine::Run()` function and locate the function that exec
     Exception: syscall
     Machine halting!
     ```
-
 Modify the program halt.c to introduce some calculation.
     ```c++
     #ifdef CHANGED
@@ -247,7 +231,6 @@ Modify the program halt.c to introduce some calculation.
         #endif
     }
     ```
-
 * Optional question: Why is the first MIPS instruction is executed at the tenth clock tick?
     -> The main thread initialize code is as below:   
     ```c++
@@ -287,15 +270,12 @@ Modify the program halt.c to introduce some calculation.
     }
     ```
 During these calls, status is equal to SystemMode, and SystemTick is set to 10 clocks, that's why MIP instruction start counting at 10.
-
-
 ### 5.2. Kernel thread observation
 * What are the compilation options of this folder?
     ```make
     DEFINES = -DTHREADS
     INCPATH = -I../threads -I../machine
     C_OFILES = $(THREAD_O)
-
     include ../Makefile.common
     include ../Makefile.dep
     ```
@@ -325,7 +305,7 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
     ```
   - Is it still working?
     ```shell
-    ~/nacho/code/threads$ ./nachos 
+    ./nachos 
     *** thread 0 looped 0 times
     *** thread 1 looped 0 times
     *** thread 2 looped 0 times
@@ -393,7 +373,7 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
     ```
     Result:
     ```shell
-    ~/nacho/code$ ./threads/nachos
+    ./threads/nachos
     *** thread 0 looped 0 times
     *** thread 0 looped 1 times
     *** thread 0 looped 2 times
@@ -414,16 +394,12 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
     *** thread 1 looped 7 times
     *** thread 1 looped 8 times
     *** thread 1 looped 9 times
-
     No threads ready or runnable, and no pending interrupts.
     Assuming the program completed.
     Machine halting!
     ```
-
-
     * What can you deduce about the preemption of the default kernel threads?
         -> Thread preemption and scheduling are processed by `currentThread->Yield();` method.
-
     * Restore the previously commented line. You can run NachOS by forcing a certain degree of preemption with the `-rs <n>` option.
         ```shell
         ~/nacho/code/threads$ ./nachos -rs 0
@@ -454,16 +430,13 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
         Assuming the program completed.
         Machine halting!
         ```
-    * What happens?
-        -> The sequence of executing changed, no longer 0-1-2, but may appear randomly.
-
+    * What happens? -> The sequence of executing changed, no longer 0-1-2, but may appear randomly.
     * Pair up this with the `-d + option`. How many clock ticks are there now?
     ```shell
-    ~/nacho/code/threads$ ./nachos -rs 7 -d +
+    ~code/threads$ ./nachos -rs 7 -d +
     Scheduling interrupt handler the timer at time = 78
     interrupts: off -> on == Tick 10 == interrupts: on -> off
     ```
-
     * This point is quite difficult to understand. Check your intuition by commenting the line `currentThread->Yield();`
     ```shell
     ~/nacho/code/threads$ ./nachos -rs 7 -d +
@@ -492,9 +465,7 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
     End of pending interrupts
             interrupts: off -> on
     ```
-
-    * Your conclusions?
-        -> Context-switching/preemption are costly, multi-threading is not always improving program performance.
+    * Your conclusions? -> Context-switching/preemption are costly, multi-threading is not always improving program performance.
 
 ### 5.3. Discovering the scheduler
 #### The change of explicit content
@@ -543,70 +514,55 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
 
     #ifdef USER_PROGRAM // ignore until running user programs
         if (currentThread->space != NULL)
-        {                                   // if this thread is a user program,
+        {                                   
             currentThread->SaveUserState(); // save the user's CPU registers
             currentThread->space->SaveState();
         }
     #endif
-
-        oldThread->CheckOverflow(); // check if the old thread
-        // had an undetected stack overflow
-
-        currentThread = nextThread;        // switch to the next thread
-        currentThread->setStatus(RUNNING); // nextThread is now running
-
-        DEBUG('t', "Switching from thread \"%s\" to thread \"%s\"\n",
-            oldThread->getName(), nextThread->getName());
+        oldThread->CheckOverflow(); 
+        currentThread = nextThread;        
+        currentThread->setStatus(RUNNING); 
+        DEBUG('t', "Switching from thread \"%s\" to thread \"%s\"\n", oldThread->getName(), nextThread->getName());
         SWITCH(oldThread, nextThread);
-
         DEBUG('t', "Now in thread \"%s\"\n", currentThread->getName());
-
         if (threadToBeDestroyed != NULL)
         {
             delete threadToBeDestroyed;
             threadToBeDestroyed = NULL;
         }
-
     #ifdef USER_PROGRAM
         if (currentThread->space != NULL)
-        {                                      // if there is an address space
+        {                                      
             currentThread->RestoreUserState(); // to restore, do it.
             currentThread->space->RestoreState();
         }
     #endif
     }
     ```
-
 * What are the respective roles of the `ReadyToRun()`, `FindNextToRun()`, and `Run()` functions?
-    - `ReadyToRun()`: Mark a thread as ready, but not running.Put it on the ready list, for later scheduling onto the CPU.
+    - `ReadyToRun()`: Mark a thread as ready, but not running. Put it on the ready list, and later scheduling on the CPU.
     - `FindNextToRun()`: Return the next thread to be scheduled onto the CPU.
     - `Run()`: Dispatch the CPU to nextThread.  Save the state of the old thread, and load the state of the new thread, by calling the machine dependent context switch routine.
-
 #### In the heart of the context switch:
 * In which function of the Scheduler class is the actual instruction responsible of a context switch between two processes?
     ```c++
     // Stop running oldThread and start running newThread
     void SWITCH (Thread * oldThread, Thread * newThread);
     ```
-
 * Find the source of the corresponding low level function. What is it doing ?
     ```c++
     /* void SWITCH( thread *t1, thread *t2 )
-    **
     ** on entry, stack looks like this:
     **      8(esp)  ->              thread *t2
     **      4(esp)  ->              thread *t1
     **       (esp)  ->              return address
-    **
     ** we push the current eax on the stack so that we can use it as
     ** a pointer to t1, this decrements esp by 4, so when we use it
     ** to reference stuff on the stack, we add 4 to the offset.
     */
             .comm   _eax_save,4
-
             .globl  SWITCH
     SWITCH:
-
             movl    %eax,_eax_save          /* save the value of eax */
             movl    4(%esp),%eax            /* move pointer to t1 into eax */
             movl    %ebx,_EBX(%eax)         /* save registers */
@@ -620,9 +576,7 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
             movl    %ebx,_EAX(%eax)         /* store it */
             movl    0(%esp),%ebx            /* get return address from stack into ebx */
             movl    %ebx,_PC(%eax)          /* save it into the pc storage */
-
             movl    8(%esp),%eax            /* move pointer to t2 into eax */
-
             movl    _EAX(%eax),%ebx         /* get new value for eax into ebx */
             movl    %ebx,_eax_save          /* save it */
             movl    _EBX(%eax),%ebx         /* retore old registers */
@@ -635,14 +589,10 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
             movl    _PC(%eax),%eax          /* restore return address into eax */
             movl    %eax,0(%esp)            /* copy over the ret address on the stack */
             movl    _eax_save,%eax
-
             ret
     ```
-
-
 ### 5.4. Exercise
 Change the `Yield()` method to make a context switch only once every two calls.
-
 ```c++
 void Thread::Yield()
 {
@@ -657,11 +607,9 @@ void Thread::Yield()
     ...
 }
 ```
-
 Restart the nachos program in the folder threads and observe the execution (with the -d option and/or with gdb).
-
 ```shell
-~/nacho/code/threads$ ./nachos
+~code/threads$ ./nachos
 *** thread 0 looped 0 times
 *** thread 1 looped 0 times
 *** thread 1 looped 1 times
