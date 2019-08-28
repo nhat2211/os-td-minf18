@@ -1,15 +1,10 @@
 # MINF18
-TD OS Reporting
-
-Devoir 1
-
-Members:
-
-Vo Hung Son
-
-Tran Quang Nhat
-
-Concurrency and synchronization
+* TD OS Reporting
+	- Devoir 1
+	- Members:
+	- Vo Hung Son
+	- Tran Quang Nhat
+* Concurrency and synchronization
 
 ## 1. What is the goal?
 ```c
@@ -52,12 +47,10 @@ void ConsoleTest (const char *in, const char *out)
     readAvail = new Semaphore ("read avail", 0);
     writeDone = new Semaphore ("write done", 0);
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-
     for (;;)
     {
         readAvail->P ();	// wait for character to arrive
         ch = console->GetChar ();
-
         console->PutChar (ch);    // echo it!
         writeDone->P ();  // wait for write to finish
         if (ch == 'q') {
@@ -65,7 +58,6 @@ void ConsoleTest (const char *in, const char *out)
             break;	
         }
     }
-
     delete console;
     delete readAvail;
     delete writeDone;
@@ -79,15 +71,12 @@ void ConsoleTest (const char *in, const char *out)
     readAvail = new Semaphore ("read avail", 0);
     writeDone = new Semaphore ("write done", 0);
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-
     for (;;)
     {
         readAvail->P ();	// wait for character to arrive
         ch = console->GetChar ();
-
         console->PutChar (ch);    // echo it!
         writeDone->P ();  // wait for write to finish
-
         if (ch == 'q') {
             printf ("Nothing more, bye!\n");
         #ifdef CHANGED
@@ -96,13 +85,11 @@ void ConsoleTest (const char *in, const char *out)
             break;		// if q, quit
         }
     }
-    
     delete console;
     delete readAvail;
     delete writeDone;
 }
 ```
-
 ### 2.3 Modify `userprog/progtest.cc` to write “<x>” instead of “x” in the loop body
 ```c
 void ConsoleTest (const char *in, const char *out)
@@ -111,12 +98,10 @@ void ConsoleTest (const char *in, const char *out)
     readAvail = new Semaphore ("read avail", 0);
     writeDone = new Semaphore ("write done", 0);
     console = new Console (in, out, ReadAvailHandler, WriteDoneHandler, 0);
-
     for (;;)
     {
-        readAvail->P ();	// wait for character to arrive
+        readAvail->P ();	
         ch = console->GetChar ();
-
     #ifdef CHANGED
         console->PutChar ('<');
         writeDone->P ();
@@ -132,7 +117,7 @@ void ConsoleTest (const char *in, const char *out)
         #ifdef CHANGED
             printf ("Goodbye!\n");
         #endif
-            break;		// if q, quit
+            break;		
         }
     }
     delete console;
@@ -140,7 +125,6 @@ void ConsoleTest (const char *in, const char *out)
     delete writeDone;
 }
 ```
-
 ### 2.4 Verify that this also works with an input file and an output file
 ```c
 void ConsoleTest (const char *in, const char *out)
@@ -190,20 +174,17 @@ class SynchConsole : dontcopythis
 {
 public:
 	SynchConsole(const char *readFile, const char *writeFile); // initialize the hardware console device
-	~SynchConsole();										   // clean up console emulation
+	~SynchConsole(); // clean up console emulation
 
 	void SynchPutChar(int ch);			 // Unix putchar(3S)
 	int SynchGetChar();					 // Unix getchar(3S)
 	void SynchPutString(const char *s);  // Unix fputs(3S)
 	void SynchGetString(char *s, int n); // Unix fgets(3S)
-
 private:
 	static void ReadAvailHandler(void *arg);
 	static void WriteDoneHandler(void *arg);
-
 	static Semaphore *readAvail;
 	static Semaphore *writeDone;
-
 	Console *console;
 };
 ```
@@ -284,9 +265,7 @@ int main(int argc, char **argv)
         #endif
             ...
     }
-
     ...
-
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount)
 	{
         ...
@@ -363,7 +342,7 @@ void SynchConsoleTest (const char *in, const char *out)
 ```
 
 ### 4.3 The assembly code of PutChar()
-```c++
+```asm
 	.globl PutChar
 	.ent	PutChar
 PutChar:
@@ -502,7 +481,7 @@ void PutString(char s[]);
 #endif
 ```
 
-```c++
+```asm
 /** start.S */
 
 	.globl PutString
@@ -631,7 +610,7 @@ int main()
     - We can use `Exit()` syscall to return the error code to the Linux program.
 
 * Look for test “who” call the main function.
-    ```c++
+    ```asm
     /* -------------------------------------------------------------
     * __start
     *	Initialize running a C program, by calling "main". 
@@ -642,7 +621,6 @@ int main()
     */
 
         .org USER_START_ADDRESS
-
         .globl __start
         .ent	__start
     __start:
@@ -670,7 +648,7 @@ int main()
     #endif
     ```
 
-    ```c++
+    ```asm
     /** start.S */
 
         .globl GetChar
@@ -753,7 +731,7 @@ void GetString(char *s, int n);
 #endif
 ```
 
-```c++
+```asm
 /** start.S */
 
     .globl GetString
@@ -869,5 +847,5 @@ void ExceptionHandler (ExceptionType which)
 ```
 ## 8. Bonus: a printf
 * Why is it a bad idea to set up a Printf system call?
-    - System call is a costly operation, thus it should be extremely fast and efficient. Printf put sequence of character to console, which is an I/O bound operation which cost a lot of time to finish. So, in general it's not a good idea to implement Printf as a system call.
+    - System call is a costly operation, thus it should be extremely fast and efficient. Printf put sequence of character to console, which is an I/O bound operation which cost a lot of time to finish. So, it isn't good to implement Printf as a system call.
 
