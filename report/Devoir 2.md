@@ -1,11 +1,9 @@
 # Minf18
 TD OS Reporting
-
-Devoir 2
-
-Members:
-
-Vo Hung Son
+    - Devoir 0 
+    - Members:
+    - Vo Hung Son 
+    - Tran Quang Nhat
 
 Tran Quang Nhat
 # Multi-threading
