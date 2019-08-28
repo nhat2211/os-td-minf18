@@ -84,18 +84,18 @@ The code of `./userprog/nachos -x ./test/halt`
 ### 2.2 System initialization
 
 * How is this first kernel thread created?
-- Answer:
-- Step 1:Call into Start method.
-- Step 2: In the Start method call into StackAllocate method
-- Step 3: In the StackAllocate mehod that we init a stack with size of long
-- step 4: Register stack by valgrind_id.
-- Step 5: check constant value to work in range (low addresses to high addresses or opposite) Step 6: SetupThreadState that it is called - be StartupPCState of machine.
-- Step 7: Register InitialPCState of machine state by func with long value.
-- Step 8: Register InitialArgState of machine state by arg with long value.
-- Step 9: Register WhenDonePCState of machine state by ThreadFinish method with long value.
-- Step 10: Set IntStatus oldLevel = interrupt->SetLevel (IntOff)
-- Step 11: Run the thread by code line scheduler->ReadyToRun (this);
-- So the first kernel thread is the main thread that was created by operating system.
+    - Answer:
+    - Step 1:Call into Start method.
+    - Step 2: In the Start method call into StackAllocate method
+    - Step 3: In the StackAllocate mehod that we init a stack with size of long
+    - step 4: Register stack by valgrind_id.
+    - Step 5: check constant value to work in range (low addresses to high addresses or opposite) Step 6: SetupThreadState that it is      called - be StartupPCState of machine.
+    - Step 7: Register InitialPCState of machine state by func with long value.
+    - Step 8: Register InitialArgState of machine state by arg with long value.
+    - Step 9: Register WhenDonePCState of machine state by ThreadFinish method with long value.
+    - Step 10: Set IntStatus oldLevel = interrupt->SetLevel (IntOff)
+    - Step 11: Run the thread by code line scheduler->ReadyToRun (this);
+    - So the first kernel thread is the main thread that was created by operating system.
 
 * Where does its stack and its registers come from?
 The stack and registers come from the main thread which is called by the real operating system, when allocate the program and start the `main()` method.
