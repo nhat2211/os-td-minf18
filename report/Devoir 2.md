@@ -1,11 +1,10 @@
 # Minf18
-TD OS Reporting
+* TD OS Reporting
     - Devoir 0 
     - Members:
     - Vo Hung Son 
     - Tran Quang Nhat
 
-Tran Quang Nhat
 # Multi-threading
 ## 1. Multi-threading in user programs
 
