@@ -402,11 +402,11 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
         -> Thread preemption and scheduling are processed by `currentThread->Yield();` method.
     * Restore the previously commented line. You can run NachOS by forcing a certain degree of preemption with the `-rs <n>` option.
         ```shell
-        ~/nacho/code/threads$ ./nachos -rs 0
+        ~/code/threads$ ./nachos -rs 0
         -rs option needs a seed value        
         ```
         ```shell
-        ~/nacho/code/threads$ ./nachos -rs 1
+        ~/code/threads$ ./nachos -rs 1
         *** thread 0 looped 0 times
         *** thread 1 looped 0 times
         *** thread 2 looped 0 times
@@ -418,7 +418,7 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
         Machine halting!
         ```
         ```shell
-        ~/Projects/nacho/code/threads$ ./nachos -rs 7
+        ~/code/threads$ ./nachos -rs 7
         *** thread 0 looped 0 times
         *** thread 1 looped 0 times
         *** thread 2 looped 0 times
@@ -439,7 +439,7 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
     ```
     * This point is quite difficult to understand. Check your intuition by commenting the line `currentThread->Yield();`
     ```shell
-    ~/nacho/code/threads$ ./nachos -rs 7 -d +
+    ~/code/threads$ ./nachos -rs 7 -d +
     Scheduling interrupt handler the timer at time = 78
             interrupts: off -> on
     == Tick 10 ==
@@ -550,7 +550,7 @@ During these calls, status is equal to SystemMode, and SystemTick is set to 10 c
     void SWITCH (Thread * oldThread, Thread * newThread);
     ```
 * Find the source of the corresponding low level function. What is it doing ?
-    ```c++
+    ```asm
     /* void SWITCH( thread *t1, thread *t2 )
     ** on entry, stack looks like this:
     **      8(esp)  ->              thread *t2
